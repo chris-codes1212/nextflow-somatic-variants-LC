@@ -2,26 +2,11 @@
 
 nextflow.enable.dsl=2
 
-// ============================================================
 // nextflow-somatic-variant-demo
 // Somatic variant calling pipeline for paired tumor/normal RNA-seq
 // Modernized from a class project into Nextflow DSL2
-// ============================================================
 
-log.info """
-    ================================================
-     SOMATIC VARIANT CALLING PIPELINE (DSL2)
-    ================================================
-     reference   : ${params.reference}
-     sample_sheet: ${params.sample_sheet}
-     outdir      : ${params.outdir}
-     gene_panel  : ${params.gene_panel}
-    ================================================
-""".stripIndent()
-
-// ------------------------------------------------------------
 // Include modules
-// ------------------------------------------------------------
 include { FETCH_READS        } from './modules/fetch_reads'
 include { TRIM_READS         } from './modules/trim'
 include { ALIGN_READS        } from './modules/align'
@@ -31,13 +16,12 @@ include { FILTER_SOMATIC     } from './modules/somatic_filter'
 include { GENE_PANEL_REPORT  } from './modules/gene_panel_analysis'
 include { MULTIQC            } from './modules/multiqc'
 
-// ------------------------------------------------------------
+
 // Main workflow
-// ------------------------------------------------------------
 workflow {
 
     // Read sample sheet: patient_id, tumor_SRA, normal_SRA
-    Channel
+    channel
         .fromPath(params.sample_sheet)
         .splitCsv(header: true)
         .map { row -> tuple(row.patient_id, row.tumor_SRA, row.normal_SRA) }
