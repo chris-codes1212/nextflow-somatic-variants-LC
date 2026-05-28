@@ -1,4 +1,4 @@
-# nextflow-somatic-variant-demo
+# nextflow-somatic-variant-LC
 
 A modular **Nextflow DSL2** somatic variant calling pipeline for paired tumor/normal RNA-seq data. Identifies tumor-specific (somatic) mutations and maps them against a curated cancer gene panel (EGFR, KRAS, BRAF, and others).
 
