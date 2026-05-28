@@ -66,12 +66,16 @@ nextflow run main.nf -profile docker
 ### Run on AWS Batch
 ```bash
 export NXF_WORK=s3://your-bucket/nextflow-work
+export TOWER_ACCESS_TOKEN=<your-seqera-token>
 
 nextflow run main.nf \
     -profile awsbatch \
-    -bucket-dir s3://your-bucket/nextflow-work \
-    --outdir s3://your-bucket/results
+    --aws_region us-east-1 \
+    --aws_queue  nextflow-batch-queue \
+    --outdir     s3://your-bucket/results
 ```
+
+`--aws_region` and `--aws_queue` default to the values in `nextflow.config`; override them here to target a different region or queue without editing the config.
 
 ### Resume a failed run
 ```bash
@@ -90,6 +94,8 @@ nextflow run main.nf -profile docker -resume
 | `gene_panel`   | `assets/cancer_gene_panel.json`                      | Cancer gene panel JSON             |
 | `max_cpus`     | `16`                                                 | Max CPUs per process               |
 | `max_memory`   | `64.GB`                                              | Max memory per process             |
+| `aws_region`   | `us-east-1`                                          | AWS region for Batch execution     |
+| `aws_queue`    | `nextflow-batch-queue`                               | AWS Batch job queue name           |
 
 Override any parameter at runtime:
 ```bash
@@ -128,9 +134,10 @@ results/
 ## Engineering Highlights
 
 - **Modular Nextflow DSL2** — each tool is an isolated process in `modules/`, independently testable and reusable
-- **Containerized execution** — Biocontainers images pinned per process for full reproducibility
+- **Wave + conda** — containers provisioned on-demand by [Seqera Wave](https://seqera.io/wave/) from conda specs; no hardcoded registry URIs
 - **Multi-profile support** — `local`, `docker`, `awsbatch`, and `sge` profiles; switch with `-profile`
-- **AWS Batch ready** — S3 working directory, queue configuration, and IAM-compatible setup
+- **AWS Batch ready** — S3 working directory; region and queue configurable at runtime via `--aws_region` / `--aws_queue`
+- **Seqera Platform monitoring** — Tower enabled by default; set `TOWER_ACCESS_TOKEN` to stream run progress to [cloud.seqera.io](https://cloud.seqera.io)
 - **Built-in resume** — Nextflow caching means interrupted runs restart from the last successful step
 - **Resource labels** — `low`/`medium`/`high` labels control CPU/memory per process, tunable without touching module code
 - **Somatic variant strategy** — `bcftools isec --complement` subtracts germline variants (present in normal) from tumor calls, isolating true somatic mutations
