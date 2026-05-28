@@ -1,0 +1,66 @@
+%%metro title: Somatic Variant Calling Pipeline
+%%metro style: dark
+%%metro file: sra_in     | SRA Accessions
+%%metro file: report_out | Mutation Report
+%%metro file: qc_out     | MultiQC Report
+%%metro line: somatic_line | Somatic Analysis | #297ccb
+%%metro line: qc_line      | Quality Control  | #36dc27
+%%metro legend: bl
+
+graph LR
+
+    subgraph fetch [Fetch Reads]
+        sra_in[ ]
+        FETCH_READS
+        sra_in -->|somatic_line,qc_line| FETCH_READS
+    end
+
+    subgraph trim [Trim & QC]
+        %%metro entry: left | somatic_line,qc_line
+        %%metro exit: right | somatic_line,qc_line
+        TRIM_READS
+    end
+
+    subgraph align [Align & Sort]
+        %%metro entry: left | somatic_line,qc_line
+        %%metro exit: right | somatic_line
+        %%metro exit: right | qc_line
+        ALIGN_READS
+        SORT_INDEX_BAM
+        ALIGN_READS -->|somatic_line,qc_line| SORT_INDEX_BAM
+    end
+
+    subgraph variants [Call Variants]
+        %%metro entry: left | somatic_line
+        %%metro exit: right | somatic_line
+        CALL_VARIANTS
+    end
+
+    subgraph filter [Somatic Filter]
+        %%metro entry: left | somatic_line
+        %%metro exit: right | somatic_line
+        FILTER_SOMATIC
+    end
+
+    subgraph panel [Gene Panel]
+        %%metro entry: left | somatic_line
+        GENE_PANEL_REPORT
+        report_out[ ]
+        GENE_PANEL_REPORT -->|somatic_line| report_out
+    end
+
+    subgraph qc [Quality Control]
+        %%metro entry: left | qc_line
+        MULTIQC
+        qc_out[ ]
+        MULTIQC -->|qc_line| qc_out
+    end
+
+    %% Inter-subgraph connections
+    FETCH_READS    -->|somatic_line,qc_line| TRIM_READS
+    TRIM_READS     -->|somatic_line,qc_line| ALIGN_READS
+    TRIM_READS     -->|qc_line| MULTIQC
+    SORT_INDEX_BAM -->|somatic_line| CALL_VARIANTS
+    SORT_INDEX_BAM -->|qc_line| MULTIQC
+    CALL_VARIANTS  -->|somatic_line| FILTER_SOMATIC
+    FILTER_SOMATIC -->|somatic_line| GENE_PANEL_REPORT
