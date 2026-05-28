@@ -65,13 +65,13 @@ nextflow run main.nf -profile docker
 
 ### Run on AWS Batch
 ```bash
-export NXF_WORK=s3://your-bucket/nextflow-work
 export TOWER_ACCESS_TOKEN=<your-seqera-token>
 
 nextflow run main.nf \
     -profile awsbatch \
+    -work-dir    s3://your-bucket/nextflow-work \
     --aws_region us-east-1 \
-    --aws_queue  nextflow-batch-queue \
+    --aws_queue  nextflow-bio-queue \
     --outdir     s3://your-bucket/results
 ```
 
