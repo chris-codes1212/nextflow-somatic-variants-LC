@@ -8,20 +8,7 @@ Originally developed as a bash-based class project; modernized into a portable, 
 
 ## Pipeline Overview
 
-```mermaid
-flowchart TD
-    A[Sample Sheet\npatient_id · tumor_SRA · normal_SRA] --> B[FETCH_READS\nfasterq-dump]
-    B --> C[TRIM_READS\nTrim Galore + FastQC]
-    C --> D[ALIGN_READS\nBWA-MEM2]
-    D --> E[SORT_INDEX_BAM\nsamtools sort · index · flagstat]
-    E --> F[CALL_VARIANTS\nbcftools mpileup · call]
-    F --> G[FILTER_SOMATIC\nbcftools isec --complement]
-    G --> H[GENE_PANEL_REPORT\nPython · VCF → CSV]
-    C --> I[MULTIQC\nAggregated QC Report]
-    D --> I
-    H --> J[(results/)]
-    I --> J
-```
+![Pipeline diagram](nf-metro/pipeline.svg)
 
 ---
 
