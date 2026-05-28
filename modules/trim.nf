@@ -21,8 +21,7 @@ process TRIM_READS {
           path("normal/*_val_1.fq.gz"),
           path("normal/*_val_2.fq.gz"),
           emit: trimmed
-    path "tumor/*_fastqc.{zip,html}", emit: reports
-    path "normal/*_fastqc.{zip,html}", emit: reports
+    path "{tumor,normal}/*_fastqc.{zip,html}", emit: reports
 
     script:
     """
