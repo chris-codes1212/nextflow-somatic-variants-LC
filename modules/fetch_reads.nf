@@ -21,6 +21,11 @@ process FETCH_READS {
 
     script:
     """
+    # Configure SRA toolkit for non-interactive container use
+    mkdir -p \${HOME}/.ncbi
+    printf '/LIBS/GUID = "00000000-0000-0000-0000-000000000001"\n/repository/user/main/public/cache-enabled = "false"\n/repository/user/main/public/root = "."\n' \
+        > \${HOME}/.ncbi/user-settings.mkfg
+
     mkdir -p tumor normal
 
     echo "Fetching tumor reads: ${tumor_SRA}"
