@@ -6,7 +6,7 @@ process SORT_INDEX_BAM {
     tag "${patient_id}"
     label 'medium'
 
-    publishDir "${params.outdir}/sorted_bam/${patient_id}", mode: 'copy'
+    publishDir { "${params.outdir}/sorted_bam/${patient_id}" }, mode: 'copy'
 
     input:
     tuple val(patient_id),

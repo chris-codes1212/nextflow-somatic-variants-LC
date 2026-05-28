@@ -8,7 +8,7 @@ process FILTER_SOMATIC {
     tag "${patient_id}"
     label 'medium'
 
-    publishDir "${params.outdir}/somatic_variants/${patient_id}", mode: 'copy'
+    publishDir { "${params.outdir}/somatic_variants/${patient_id}" }, mode: 'copy'
 
     input:
     tuple val(patient_id),

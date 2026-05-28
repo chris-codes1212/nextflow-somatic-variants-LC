@@ -7,7 +7,7 @@ process GENE_PANEL_REPORT {
     tag "${patient_id}"
     label 'low'
 
-    publishDir "${params.outdir}/gene_panel/${patient_id}", mode: 'copy'
+    publishDir { "${params.outdir}/gene_panel/${patient_id}" }, mode: 'copy'
 
     input:
     tuple val(patient_id), path(somatic_vcf)

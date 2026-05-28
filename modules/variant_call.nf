@@ -7,7 +7,7 @@ process CALL_VARIANTS {
     tag "${patient_id}"
     label 'high'
 
-    publishDir "${params.outdir}/variants/${patient_id}", mode: 'copy'
+    publishDir { "${params.outdir}/variants/${patient_id}" }, mode: 'copy'
 
     input:
     tuple val(patient_id),

@@ -6,7 +6,7 @@ process FETCH_READS {
     tag "${patient_id}"
     label 'low'
 
-    publishDir "${params.outdir}/raw_reads/${patient_id}", mode: 'copy'
+    publishDir { "${params.outdir}/raw_reads/${patient_id}" }, mode: 'copy'
 
     input:
     tuple val(patient_id), val(tumor_SRA), val(normal_SRA)

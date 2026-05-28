@@ -8,7 +8,7 @@ process ALIGN_READS {
     tag "${patient_id}"
     label 'high'
 
-    publishDir "${params.outdir}/aligned/${patient_id}", mode: 'copy'
+    publishDir { "${params.outdir}/aligned/${patient_id}" }, mode: 'copy'
 
     input:
     tuple val(patient_id),
